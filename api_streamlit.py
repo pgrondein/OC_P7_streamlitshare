@@ -148,12 +148,13 @@ if num != '<Select>':
             unsafe_allow_html = True
     )
     nb_ = st.slider('Variables à visualiser', 0, 25, 10)
-    if 'key' not in st.session_state:
-        st.session_state['nb_var'] = nb_
-    else : 
-        st.session_state['nb_var'] = nb_
+    # if 'key' not in st.session_state:
+    #     st.session_state['nb_var'] = nb_
+    # else : 
+    #     st.session_state['nb_var'] = nb_
             
-    nb = st.session_state['nb_var']
+    # nb = st.session_state['nb_var']
+    nb = nb_
 
     column_1, column_2 = st.columns(2)
     #Détails individuels
