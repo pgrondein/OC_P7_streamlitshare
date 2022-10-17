@@ -16,15 +16,15 @@ local_css("style.css")
 url = 'https://apip7heroku.herokuapp.com/predict'
 
 #chargement des données Valid/Test
-df_valid = pd.read_csv('df_valid.csv').drop('Unnamed: 0', axis = 1)
-df_valid = df_valid.set_index('SK_ID_CURR')
-feats = [f for f in df_valid.columns if f not in ['TARGET','SK_ID_CURR','SK_ID_BUREAU','SK_ID_PREV','index']]
-X_valid = df_valid[feats]
-y_valid = df_valid['TARGET']
 df_test = pd.read_csv('df_test.csv').drop('Unnamed: 0', axis = 1)
 df_test = df_test.set_index('SK_ID_CURR')
+feats = [f for f in df_test.columns if f not in ['TARGET','SK_ID_CURR','SK_ID_BUREAU','SK_ID_PREV','index']]
 #chargement du meilleur modèle
 best_model = pickle.load(open('LR_clf.sav', 'rb'))
+#load y_proba
+f = open('y_proba.json')
+y_proba = json.load(f)
+y_proba_ = pd.DataFrame(data = y_proba)
 #chargement des coefficients globaux
 f = open('LR_coef_global.json')
 coef = json.load(f)
@@ -88,7 +88,7 @@ if num != '<Select>':
         unsafe_allow_html = True
     )
     st.markdown(
-        '<h2> Statut de la demande </h2>',
+        f'<h2> Statut de la demande n° {idx}</h2>',
         unsafe_allow_html = True
     )
     column_1, column_2 = st.columns(2)
@@ -209,6 +209,6 @@ if num != '<Select>':
         '<h2> Distribution des probabilités </h2>',
         unsafe_allow_html = True
         )
-        hist = dist_proba(X_valid, best_model, proba_api)
+        hist = dist_proba(y_proba_, best_model, proba_api, thres)
         st.plotly_chart(hist)
         

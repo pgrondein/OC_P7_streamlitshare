@@ -83,10 +83,10 @@ def feat_glo(df, nb):
     fig.update_layout(showlegend = False)
     fig.update_layout(yaxis = {'categoryorder':'array', 
                                'categoryarray': feats})
-    fig.update_yaxes(title='Variables', 
+    fig.update_yaxes(title = 'Variables', 
                      visible = True, 
                      showticklabels = True)
-    fig.update_xaxes(title='Importance', 
+    fig.update_xaxes(title = 'Importance', 
                      visible = True, 
                      showticklabels = True)
     return fig
@@ -104,15 +104,15 @@ def predict(ind, best_model, scaler, thres) :
     
     return rep, round(proba, 2)
 
-def dist_proba(X, best_model, proba_api):
-    y_proba_0 = best_model.predict_proba(X)[:,0]
-    y_proba_1 = best_model.predict_proba(X)[:,1]
+def dist_proba(y_proba_, best_model, proba_api, thres):
+    y_proba_0 = np.array(y_proba_['y_0'])
+    y_proba_1 = np.array(y_proba_['y_1'])
     
-    fig = go.Figure(layout_yaxis_range=[0,1200])
-    fig.add_trace(go.Histogram(x = y_proba_0,
-                               name = 'Acceptée',
-                               marker_color = 'lightblue'
-                               ))
+    fig = go.Figure(layout_yaxis_range = [0,1200])
+    # fig.add_trace(go.Histogram(x = y_proba_0,
+    #                            name = 'Acceptée',
+    #                            marker_color = 'lightblue'
+    #                            ))
     fig.add_trace(go.Histogram(x = y_proba_1,
                                name = 'Rejetée',
                                marker_color = 'lightcoral'
@@ -122,9 +122,19 @@ def dist_proba(X, best_model, proba_api):
             x = [proba_api, proba_api],
             y = [0, 1200],
             mode = "lines",
-            line = go.scatter.Line(color = "black"),
+            line = go.scatter.Line(color = "red"),
             showlegend = True,
-            name = 'Individu'
+            name = 'Individu - Probabilité classe rejetée'
+            )
+        )
+    fig.add_trace(
+        go.Scatter(
+            x = [thres, thres],
+            y = [0, 1200],
+            mode = "lines",
+            line = go.scatter.Line(color = "lightgrey"),
+            showlegend = True,
+            name = 'Threshold'
             )
         )
     fig.update_layout(barmode ='overlay',
