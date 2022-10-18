@@ -111,16 +111,16 @@ def dist_proba(y_proba_, best_model, proba_0, thres_0):
     fig = go.Figure(layout_yaxis_range = [0,1200])
     fig.add_trace(go.Histogram(x = y_proba_0,
                                name = 'Acceptée',
-                               marker_color = 'lightcoral'
+                               marker_color = 'lightblue'
                                ))
     fig.add_trace(
         go.Scatter(
             x = [proba_0, proba_0],
             y = [0, 1200],
             mode = "lines",
-            line = go.scatter.Line(color = "red"),
+            line = go.scatter.Line(color = "black"),
             showlegend = True,
-            name = 'Individu - Probabilité classe rejetée'
+            name = 'Score individu'
             )
         )
     fig.add_trace(
@@ -130,7 +130,7 @@ def dist_proba(y_proba_, best_model, proba_0, thres_0):
             mode = "lines",
             line = go.scatter.Line(color = "lightgrey"),
             showlegend = True,
-            name = 'Threshold'
+            name = 'Seuil'
             )
         )
     fig.update_layout(barmode ='overlay',

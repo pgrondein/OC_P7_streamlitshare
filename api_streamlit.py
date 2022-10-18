@@ -57,7 +57,7 @@ if num != '<Select>':
     request = requests.post(url, data = ind)
     req = request.json()
     proba_api = req['proba']
-    proba_0 = 1-proba_api
+    proba_0 = round(1-proba_api, 2)
     rep_api = req['rep']
 
     #Prédiction
