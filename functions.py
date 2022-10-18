@@ -20,7 +20,7 @@ def as_pyplot_figure(explanation, label = 1, figsize = (10,10)):
     feats = [f.strip('<= 0.00 0.46') for f in feats]
     feats = [f[:25] for f in feats]
     
-    colors = ['Défavorable' if x > 0 else 'Favorable' for x in coefs]
+    colors = ['Favorable' if x > 0 else 'Défavorable' for x in coefs]
 
     fig = px.bar( 
                  x = coefs, 
@@ -67,7 +67,7 @@ def feat_glo(df, nb):
     feats.reverse()
 #    st.dataframe(df.head(nb))
     
-    colors = ['Défavorable' if x > 0 else 'Favorable' for x in coefs]
+    colors = ['Favorable' if x > 0 else 'Défavorable' for x in coefs]
     
     fig = px.bar( 
                  x = coefs, 
@@ -104,22 +104,18 @@ def predict(ind, best_model, scaler, thres) :
     
     return rep, round(proba, 2)
 
-def dist_proba(y_proba_, best_model, proba_api, thres):
+def dist_proba(y_proba_, best_model, proba_0, thres_0):
     y_proba_0 = np.array(y_proba_['y_0'])
-    y_proba_1 = np.array(y_proba_['y_1'])
+    # y_proba_1 = np.array(y_proba_['y_1'])
     
     fig = go.Figure(layout_yaxis_range = [0,1200])
-    # fig.add_trace(go.Histogram(x = y_proba_0,
-    #                            name = 'Acceptée',
-    #                            marker_color = 'lightblue'
-    #                            ))
-    fig.add_trace(go.Histogram(x = y_proba_1,
-                               name = 'Rejetée',
+    fig.add_trace(go.Histogram(x = y_proba_0,
+                               name = 'Acceptée',
                                marker_color = 'lightcoral'
                                ))
     fig.add_trace(
         go.Scatter(
-            x = [proba_api, proba_api],
+            x = [proba_0, proba_0],
             y = [0, 1200],
             mode = "lines",
             line = go.scatter.Line(color = "red"),
@@ -129,7 +125,7 @@ def dist_proba(y_proba_, best_model, proba_api, thres):
         )
     fig.add_trace(
         go.Scatter(
-            x = [thres, thres],
+            x = [thres_0, thres_0],
             y = [0, 1200],
             mode = "lines",
             line = go.scatter.Line(color = "lightgrey"),

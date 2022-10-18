@@ -35,6 +35,7 @@ explainer = pickle.load(open('LR_explainer.sav', 'rb'))
 f = open('LR_params.json')
 thres_dict = json.load(f)
 thres = thres_dict['Threshold']
+thres_0 = 1-thres
 #Chargement df description variables
 df_desc = pd.read_csv('HomeCredit_columns_description.csv', encoding= 'unicode_escape')
 
@@ -56,6 +57,7 @@ if num != '<Select>':
     request = requests.post(url, data = ind)
     req = request.json()
     proba_api = req['proba']
+    proba_0 = 1-proba_api
     rep_api = req['rep']
 
     #Prédiction
@@ -102,21 +104,21 @@ if num != '<Select>':
         '<h3>Score</h3>',
         unsafe_allow_html = True
     )
-    column_2.subheader(f"{proba_api}")
+    column_2.subheader(f"{proba_0}")
     #Jauge 
     gauge = go.Figure(go.Indicator(
         domain = {'x': [0, 1], 'y': [0, 1]},
-        value = proba_api,
+        value = proba_0,
         mode = "gauge+number",
         title = {'text': "Score", 'font': {'size': 24}},
         gauge = {'axis': {'range': [None, 1]},
                  'bar': {'color': "grey"},
                  'steps' : [
-                     {'range': [0, 0.67], 'color': "lightblue"},
-                     {'range': [0.67, 1], 'color': "lightcoral"}],
+                     {'range': [0, thres_0], 'color': "lightcoral"},
+                     {'range': [thres_0, 1], 'color': "lightblue"}],
                  'threshold' :
                      {'line': {'color': "red", 'width': 4}, 
-                      'thickness': 1, 'value': thres,
+                      'thickness': 1, 'value': thres_0,
                      }
                 }
             ))
@@ -210,6 +212,6 @@ if num != '<Select>':
         '<h2> Distribution des probabilités </h2>',
         unsafe_allow_html = True
         )
-        hist = dist_proba(y_proba_, best_model, proba_api, thres)
+        hist = dist_proba(y_proba_, best_model, proba_0, thres_0)
         st.plotly_chart(hist)
         
